@@ -3,6 +3,7 @@ package com.wzw.sharding.core;
 import com.wzw.sharding.annotation.ShardingTask;
 import com.wzw.sharding.config.GlobalConfig;
 import com.wzw.sharding.config.ShardingConfig;
+import com.wzw.sharding.constants.ExecuteMode;
 import com.wzw.sharding.handler.ShardingHandler;
 import com.wzw.sharding.thread.TaskThread;
 import org.slf4j.Logger;
@@ -94,6 +95,10 @@ public class TaskExecutor {
         if(!tempPath.endsWith("/")){
             tempPath = tempPath+"/";
             shardingConfig.setTempPath(tempPath);
+        }
+
+        if(shardingConfig.getExecuteMode()==null){
+            shardingConfig.setExecuteMode(ExecuteMode.RESTART);
         }
 
     }

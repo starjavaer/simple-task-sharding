@@ -2,11 +2,14 @@ package com.wzw.sharding.thread;
 
 import com.wzw.sharding.config.GlobalConfig;
 import com.wzw.sharding.config.ShardingConfig;
+import com.wzw.sharding.utils.SimpleFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -34,6 +37,7 @@ public class TaskThread implements Callable<String> {
         ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
 
         String dataFileUrl = shardingConfig.getTempPath()+taskName+"/data/data"+shardingIndex+".txt";
+
         Integer breakpointSkip = shardingConfig.getBreakpointSkip();
 
         File dataFile = new File(dataFileUrl);
@@ -42,8 +46,12 @@ public class TaskThread implements Callable<String> {
         InputStreamReader isr = null;
         BufferedReader br = null;
 
-        int lineNum = 0;
+        Integer lineNum = 0;
+
+        Integer breakpointValue = getBreakpoint();
+
         String line = null;
+
         try {
 
             fis = new FileInputStream(dataFile);
@@ -51,13 +59,21 @@ public class TaskThread implements Callable<String> {
             br = new BufferedReader(isr);
 
             while ((line=br.readLine())!=null) {
+
+                lineNum++;//当前开始处理到第lineNum行
+
+                if(lineNum<=breakpointValue){
+                    continue;
+                }
+
                 method.invoke(obj,line);
-                lineNum++;//当前处理到第lineNum行
 
                 if(lineNum%breakpointSkip==0){
-                    updateBreakpoint();
+                    updateBreakpoint(lineNum);
                 }
             }
+
+            updateBreakpoint(lineNum);
 
         } catch (Exception e) {
             LOGGER.error("任务[param:{}]执行异常",line,e);
@@ -83,7 +99,38 @@ public class TaskThread implements Callable<String> {
         this.method = method;
     }
 
-    private void updateBreakpoint(){
+    /**
+     * 获取断点
+     * @return
+     */
+    private Integer getBreakpoint(){
+
+        ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
+
+        String breakpointFileUrl = shardingConfig.getTempPath()+taskName+"/breakpoint/data"+shardingIndex+".txt";
+
+        SimpleFile breakpointFile = new SimpleFile(breakpointFileUrl);
+        String line = breakpointFile.readLine(1);
+
+        return Integer.valueOf(line);
+
+    }
+
+    /**
+     * 更新断点
+     * @param lineNum
+     */
+    private void updateBreakpoint(Integer lineNum){
+
+        ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
+
+        String breakpointFileUrl = shardingConfig.getTempPath()+taskName+"/breakpoint/data"+shardingIndex+".txt";
+
+        SimpleFile breakpointFile = new SimpleFile(breakpointFileUrl);
+
+        List<String> lines = new ArrayList<String>();
+        lines.add(String.valueOf(lineNum));
+        breakpointFile.writeLines(lines);
         
     }
 

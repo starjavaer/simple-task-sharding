@@ -2,6 +2,7 @@ package com.wzw.sharding.handler;
 
 import com.wzw.sharding.config.GlobalConfig;
 import com.wzw.sharding.config.ShardingConfig;
+import com.wzw.sharding.constants.ExecuteMode;
 import com.wzw.sharding.thread.ShardingThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.wzw.sharding.config.GlobalConfig.getShardingConfig;
 
 /**
  * @Author:WangZhiwen
@@ -25,9 +28,12 @@ public class ShardingHandler {
 
     public void handle(List<String> dataList){
 
-        initTempDir(taskName);
+        ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
 
-        initTempFile(taskName,dataList);
+        if(shardingConfig.getExecuteMode().getValue()==ExecuteMode.RESTART.getValue()){
+            initTempDir(taskName);
+            initTempFile(taskName,dataList);
+        }
 
     }
 
@@ -37,7 +43,7 @@ public class ShardingHandler {
      */
     private void initTempDir(String taskName){
 
-        ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
+        ShardingConfig shardingConfig = getShardingConfig(taskName);
 
         try {
 
@@ -66,7 +72,7 @@ public class ShardingHandler {
      */
     private void initTempFile(String taskName,List<String> dataList){
 
-        ShardingConfig shardingConfig = GlobalConfig.getShardingConfig(taskName);
+        ShardingConfig shardingConfig = getShardingConfig(taskName);
 
         try {
 
@@ -75,12 +81,6 @@ public class ShardingHandler {
             //计算分片数
             Integer dataCount = dataList.size();
             Integer shardingCount = dataCount%shardingSize==0?dataCount/shardingSize:(dataCount/shardingSize+1);
-
-            //拼接数据文件和断点文件路径
-            /*
-            String taskTempPath = shardingConfig.getTempPath();
-            String taskDataPath = taskTempPath+taskName+"/data/";
-            String taskBreakpointPath = taskTempPath+taskName+"/breakpoint/";*/
 
             ExecutorService executorService = Executors.newCachedThreadPool();
 

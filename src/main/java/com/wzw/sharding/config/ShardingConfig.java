@@ -1,5 +1,7 @@
 package com.wzw.sharding.config;
 
+import com.wzw.sharding.constants.ExecuteMode;
+
 /**
  * @Author:WangZhiwen
  * @Description:分片配置
@@ -17,7 +19,7 @@ public class ShardingConfig<T> {
 
     private Class<T> targetClazz;//目标类
 
-    private String executeMode;//执行模式 1.
+    private ExecuteMode executeMode;//执行模式 1.
 
 
 
@@ -64,6 +66,14 @@ public class ShardingConfig<T> {
     public ShardingConfig<T> setTargetClazz(Class<T> targetClazz) {
         this.targetClazz = targetClazz;
         return this;
+    }
+
+    public ExecuteMode getExecuteMode() {
+        return executeMode;
+    }
+
+    public void setExecuteMode(ExecuteMode executeMode) {
+        this.executeMode = executeMode;
     }
 
 

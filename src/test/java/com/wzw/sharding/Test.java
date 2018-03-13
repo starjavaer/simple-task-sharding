@@ -2,6 +2,7 @@ package com.wzw.sharding;
 
 import com.wzw.sharding.annotation.ShardingTask;
 import com.wzw.sharding.config.ShardingConfig;
+import com.wzw.sharding.constants.ExecuteMode;
 import com.wzw.sharding.core.TaskExecutor;
 
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class Test {
                 .setShardingSize(10000)
                 .setTempPath("D:\\")
                 .setThreadCount(8)
-                .setBreakpointSkip(100);
+                .setBreakpointSkip(100)
+                .setExecuteMode(ExecuteMode.CONTINUE);
 
         TaskExecutor executor = new TaskExecutor("testTask");
         executor.setShardingConfig(config);
@@ -33,13 +35,12 @@ public class Test {
 
         executor.execute(dataList);
 
+
     }
 
     @ShardingTask("testTask")
     public void test(String param){
-
         System.out.println(">>>>>> "+param);
-
     }
 
 

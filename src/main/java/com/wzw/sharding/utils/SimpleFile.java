@@ -142,6 +142,7 @@ public class SimpleFile {
         List<String> lines = new ArrayList<String>();
 
         try {
+
             fis = new FileInputStream(file);
             isr = new InputStreamReader(fis);
             br = new BufferedReader(isr);
@@ -174,12 +175,18 @@ public class SimpleFile {
      */
     public String readLine(int lineNum){
         String line = null;
+
         try {
+
+            fis = new FileInputStream(file);
+            isr = new InputStreamReader(fis);
+            br = new BufferedReader(isr);
+
             int i=0;
             while((line=br.readLine())!=null){
                 i++;//当前是第多少行
-                if(lineNum!=i){
-                    continue;
+                if(lineNum==i){
+                    break;
                 }
             }
 
