@@ -29,7 +29,7 @@ public class SimpleFile {
     private FileOutputStream fos = null;
     private PrintStream ps = null;
 
-    private ReentrantLock reentrantLock = new ReentrantLock();
+    private ReentrantLock lock = new ReentrantLock();
 
     /**
      * 初始化指定文件
@@ -45,7 +45,7 @@ public class SimpleFile {
      */
     public void writeLines(List<String> lines){
 
-        reentrantLock.lock();
+        lock.lock();
 
         if(file==null){
             LOGGER.error("文件未初始化");
@@ -62,7 +62,7 @@ public class SimpleFile {
             closePS(ps);
         }
 
-        reentrantLock.unlock();
+        lock.unlock();
 
     }
 

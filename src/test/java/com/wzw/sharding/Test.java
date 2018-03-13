@@ -20,7 +20,8 @@ public class Test {
         config.setTargetClazz(Test.class)
                 .setShardingSize(10000)
                 .setTempPath("D:\\")
-                .setThreadCount(8);
+                .setThreadCount(8)
+                .setBreakpointSkip(100);
 
         TaskExecutor executor = new TaskExecutor("testTask");
         executor.setShardingConfig(config);

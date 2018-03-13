@@ -55,7 +55,7 @@ public class TaskThread implements Callable<String> {
                 lineNum++;//当前处理到第lineNum行
 
                 if(lineNum%breakpointSkip==0){
-
+                    updateBreakpoint();
                 }
             }
 

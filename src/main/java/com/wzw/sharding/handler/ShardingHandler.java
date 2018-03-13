@@ -77,9 +77,10 @@ public class ShardingHandler {
             Integer shardingCount = dataCount%shardingSize==0?dataCount/shardingSize:(dataCount/shardingSize+1);
 
             //拼接数据文件和断点文件路径
+            /*
             String taskTempPath = shardingConfig.getTempPath();
             String taskDataPath = taskTempPath+taskName+"/data/";
-            String taskBreakpointPath = taskTempPath+taskName+"/breakpoint/";
+            String taskBreakpointPath = taskTempPath+taskName+"/breakpoint/";*/
 
             ExecutorService executorService = Executors.newCachedThreadPool();
 
