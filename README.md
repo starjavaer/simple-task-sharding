@@ -24,8 +24,8 @@ ShardingConfig config = new ShardingConfig();
 config.setTargetClazz(Test.class) // @ShardingTask注解方法所属类的Class对象
       .setShardingSize(10000) // 分片大小
       .setTempPath("D:\\") // 框架运行时临时文件的（数据文件和断点文件）存放路径，请确保程序具有指定路径的写权限
-      .setThreadCount(8) // 框架用于执行分片任务的线程数（建议是针对指定服务器经过个人测试的最优线程数）
-      .setBreakpointSkip(100); // 断点跳动幅度，每成功执行执行指定次则更新一次断点值
+      .setThreadCount(8) // 执行分片任务的线程数（建议是针对指定服务器经过个人测试的最优线程数）
+      .setBreakpointSkip(100); // 断点跳动幅度，每成功执行指定次则更新一次断点
 ```
 
 3.创建执行器并注入分片配置。
